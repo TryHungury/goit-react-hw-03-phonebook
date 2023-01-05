@@ -27,10 +27,30 @@ const TitleH2 = styled.h2`
   font-family: ${p=>p.theme.fonts.heading};
 `
 
+const LS_PHONE_BOOK = 'phone_book';
+
 export class App extends Component {
   state = {
     contacts: [],
     filter: '',
+  }
+
+  componentDidMount() {
+    const saveContacts = JSON.parse(localStorage.getItem(LS_PHONE_BOOK));
+
+    if (saveContacts) {
+      this.setState({contacts: saveContacts})
+    }
+
+    return
+  }
+
+  componentDidUpdate(_, prevState) {
+    if (prevState.contacts.length !== this.state.contacts.length) {
+      localStorage.setItem(LS_PHONE_BOOK, JSON.stringify(this.state.contacts))
+    }
+
+    return
   }
 
   addNewContact = ({name, number}) => {
